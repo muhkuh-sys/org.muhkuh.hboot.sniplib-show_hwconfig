@@ -69,11 +69,26 @@ env_netx4000_cr7.Replace(LDFILE = 'src/netx4000/netx4000_cr7.ld')
 src_netx4000_cr7 = env_netx4000_cr7.SetBuildPath('targets/netx4000_cr7', 'src', sources)
 elf_netx4000_cr7 = env_netx4000_cr7.Elf('targets/netx4000_cr7/netx4000_cr7.elf', src_netx4000_cr7 + platform_lib_netx4000)
 txt_netx4000_cr7 = env_netx4000_cr7.ObjDump('targets/netx4000_cr7/netx4000_cr7.txt', elf_netx4000_cr7, OBJDUMP_FLAGS=['--disassemble', '--source', '--all-headers', '--wide'])
-bb0_netx4000_cr7 = env_netx4000_cr7.HBootImage('targets/showcfg_netx4000_cr7_spi_intram.bin', 'src/netx4000/CR7_to_INTRAM.xml', KNOWN_FILES=dict({'tElf': elf_netx4000_cr7[0]}))
-bb1_netx4000_cr7 = env_netx4000_cr7.HBootImage('targets/showcfg_netx4000_demo.bin', 'src/netx4000/config_demo.xml', KNOWN_FILES=dict({'tElf': elf_netx4000_cr7[0]}))
-bb0_cifx4000_cr7 = env_netx4000_cr7.HBootImage('targets/showcfg_cifx4000_demo.bin', 'src/netx4000/board_config_1430100R1_cifx4000.xml', KNOWN_FILES=dict({'tElfCR7': elf_netx4000_cr7[0]}))
+bin_netx4000_cr7 = env_netx4000_cr7.ObjCopy('targets/netx4000_cr7/netx4000_cr7.bin', elf_netx4000_cr7)
+tmp_netx4000_cr7 = env_netx4000_cr7.GccSymbolTemplate('targets/netx4000_cr7/snippet.xml', elf_netx4000_cr7, GCCSYMBOLTEMPLATE_TEMPLATE='templates/hboot_snippet.xml', GCCSYMBOLTEMPLATE_BINFILE=bin_netx4000_cr7[0])
 
+# Create the snippet from the parameters.
+global PROJECT_VERSION
+atSnippet = {
+    'group': 'org.muhkuh.hboot.sniplib',
+    'artifact': 'show_hwconfig',
+    'version': PROJECT_VERSION,
+    'vcs-id': env_netx4000_cr7.Version_GetVcsId(),
+    'license': 'GPL-2.0',
+    'author_name': 'Muhkuh team',
+    'author_url': 'https://github.com/muhkuh-sys',
+    'description': 'Show the current hardware configuration with an interactive menu on UART0.',
+    'categories': ['netx4000', 'hardware configuration']
+}
+snippet_netx4000_cr7 = env_netx4000_cr7.HBootSnippet('targets/snippets/hboot_snippet_netx4000_cr7_show_hwconfig-%s.xml' % PROJECT_VERSION, tmp_netx4000_cr7, PARAMETER=atSnippet)
 
+# Create the POM file.
+tPOM = env_netx4000_cr7.POMTemplate('targets/snippets/hboot_snippet_netx4000_cr7_show_hwconfig-%s.pom' % PROJECT_VERSION, 'templates/pom.xml', POM_TEMPLATE_GROUP=atSnippet['group'], POM_TEMPLATE_ARTIFACT=atSnippet['artifact'], POM_TEMPLATE_VERSION=atSnippet['version'], POM_TEMPLATE_PACKAGING='xml')
 
 #env_netx56 = env_netx56_default.Clone()
 #env_netx56.Replace(LDFILE = 'src/netx56/netx56.ld')
