@@ -8,8 +8,8 @@
 
 @--------------------------------------
 
-  .func start
-
+    .func start, start
+    .type start, STT_FUNC
 start:
 	stmfd   sp!, {r0, r1, r2, lr}
 
