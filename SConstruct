@@ -74,8 +74,9 @@ tmp_netx4000_cr7 = env_netx4000_cr7.GccSymbolTemplate('targets/netx4000_cr7/snip
 
 # Create the snippet from the parameters.
 global PROJECT_VERSION
+aArtifactGroupReverse = ['org', 'muhkuh', 'hboot', 'sniplib']
 atSnippet = {
-    'group': 'org.muhkuh.hboot.sniplib',
+    'group': '.'.join(aArtifactGroupReverse),
     'artifact': 'show_hwconfig',
     'version': PROJECT_VERSION,
     'vcs-id': env_netx4000_cr7.Version_GetVcsId(),
@@ -85,10 +86,11 @@ atSnippet = {
     'description': 'Show the current hardware configuration with an interactive menu on UART0.',
     'categories': ['netx4000', 'hardware configuration']
 }
-snippet_netx4000_cr7 = env_netx4000_cr7.HBootSnippet('targets/snippets/hboot_snippet_netx4000_cr7_show_hwconfig-%s.xml' % PROJECT_VERSION, tmp_netx4000_cr7, PARAMETER=atSnippet)
+strArtifactPath = 'targets/snippets/%s/%s/%s' % ('/'.join(aArtifactGroupReverse), atSnippet['artifact'], PROJECT_VERSION)
+snippet_netx4000_cr7 = env_netx4000_cr7.HBootSnippet('%s/%s-%s.xml' % (strArtifactPath, atSnippet['artifact'], PROJECT_VERSION), tmp_netx4000_cr7, PARAMETER=atSnippet)
 
 # Create the POM file.
-tPOM = env_netx4000_cr7.POMTemplate('targets/snippets/hboot_snippet_netx4000_cr7_show_hwconfig-%s.pom' % PROJECT_VERSION, 'templates/pom.xml', POM_TEMPLATE_GROUP=atSnippet['group'], POM_TEMPLATE_ARTIFACT=atSnippet['artifact'], POM_TEMPLATE_VERSION=atSnippet['version'], POM_TEMPLATE_PACKAGING='xml')
+tPOM = env_netx4000_cr7.POMTemplate('%s/%s-%s.pom' % (strArtifactPath, atSnippet['artifact'], PROJECT_VERSION), 'templates/pom.xml', POM_TEMPLATE_GROUP=atSnippet['group'], POM_TEMPLATE_ARTIFACT=atSnippet['artifact'], POM_TEMPLATE_VERSION=atSnippet['version'], POM_TEMPLATE_PACKAGING='xml')
 
 #env_netx56 = env_netx56_default.Clone()
 #env_netx56.Replace(LDFILE = 'src/netx56/netx56.ld')
