@@ -9,7 +9,7 @@ docker.image('jenkins-ubuntu-1604').inside {
 	sh 'python mbs/mbs'
 
 	stage 'Save Artifacts'
-	archive 'targets/snippets/*.xml,targets/snippets/*.pom'
+	archive 'targets/snippets/**/*.xml,targets/snippets/**/*.pom'
 
 	stage 'Clean after build'
 	sh 'rm -rf .[^.] .??* *'
