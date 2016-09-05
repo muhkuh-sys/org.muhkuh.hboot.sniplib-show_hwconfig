@@ -458,17 +458,18 @@ static void show_ddr(void)
 
 
 	uprintf("DDR CTRL:\n");
-	uprintf("    00       01       02       03       04       05       06       07       08       09       0a       0b       0c       0d       0e       0f");
+	uprintf("         +0       +1       +2       +3       +4       +5       +6       +7");
 	for(uiCnt=0; uiCnt<(sizeof(ptDdrCtrlArea->aulDDR_CTRL_CTL)/sizeof(ptDdrCtrlArea->aulDDR_CTRL_CTL[0])); uiCnt++)
 	{
-		if( (uiCnt&15)==0 )
+		if( (uiCnt&7)==0 )
 		{
-			uprintf("\n%02x: ");
+			uprintf("\n%03d: ", uiCnt);
 		}
 
 		uprintf("%08x ", ptDdrCtrlArea->aulDDR_CTRL_CTL[uiCnt]);
 	}
 
+	uprintf("\n");
 	uprintf("\n");
 
 	uprintf("DDR PHY:\n");
