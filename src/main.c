@@ -386,18 +386,17 @@ static void show_mmios(void)
 	unsigned long ulInvertIn;
 	const char *pcFunction;
 	unsigned int uiLen;
-	unsigned int uiNlCnt;
 
 
 	uprintf("MMIOs:\n");
-	uprintf("      0                       1                       2                       3                       4");
+	uprintf("      +0                      +1                      +2                      +3");
 
 	/* Loop over all MMIOs. */
 	uiCnt = 0;
-	uiNlCnt = 0;
 	while( uiCnt<(sizeof(ptMmioCtrlArea->aulMmio_cfg)/sizeof(ptMmioCtrlArea->aulMmio_cfg[0])) )
 	{
-		if( uiNlCnt==0U )
+		/* Insert a line feed after every 4 entries. */
+		if( (uiCnt&3)==0U )
 		{
 			uprintf("\n%02x: ", uiCnt);
 		}
@@ -434,16 +433,9 @@ static void show_mmios(void)
 		}
 
 		uiCnt++;
-
-		/* Insert a line feed all 5 entries. */
-		uiNlCnt++;
-		if( uiNlCnt>=5U )
-		{
-			uiNlCnt = 0;
-		}
 	}
 
-	uprintf("\n");
+	uprintf("\n\n");
 }
 
 
@@ -469,14 +461,14 @@ static void show_ddr(void)
 		uprintf("%08x ", ptDdrCtrlArea->aulDDR_CTRL_CTL[uiCnt]);
 	}
 
-	uprintf("\n");
-	uprintf("\n");
+	uprintf("\n\n");
 
 	uprintf("DDR PHY:\n");
 	uprintf("FUNCCTRL: %08x    DLLCTRL: %08x    ZQCALCTRL: %08x    ZQODTCTRL: %08x\n", ptDdrPhyArea->ulDDR_PHY_FUNCCTRL, ptDdrPhyArea->ulDDR_PHY_DLLCTRL, ptDdrPhyArea->ulDDR_PHY_ZQCALCTRL, ptDdrPhyArea->ulDDR_PHY_ZQODTCTRL);
 	uprintf("RDCTRL:   %08x    RDTMG:   %08x    FIFOINIT:  %08x    OUTCTRL:   %08x\n", ptDdrPhyArea->ulDDR_PHY_RDCTRL, ptDdrPhyArea->ulDDR_PHY_RDTMG, ptDdrPhyArea->ulDDR_PHY_FIFOINIT, ptDdrPhyArea->ulDDR_PHY_OUTCTRL);
 	uprintf("WLCTRL1:  %08x    WLCTRL2: %08x    MASKSDLY1: %08x    MASKSDLY2: %08x\n", ptDdrPhyArea->ulDDR_PHY_WLCTRL1, ptDdrPhyArea->ulDDR_PHY_WLCTRL2, ptDdrPhyArea->ulDDR_PHY_MASKSDLY1, ptDdrPhyArea->ulDDR_PHY_MASKSDLY2);
 	uprintf("ZQCODE:   %08x\n", ptDdrPhyArea->ulDDR_PHY_ZQCODE);
+	uprintf("\n\n");
 }
 
 
@@ -493,6 +485,7 @@ static void show_power_and_clocks(void)
 	uprintf("NOCPWRMASK: %08x\n", ptRAPSysctrlArea->ulRAP_SYSCTRL_NOCPWRMASK);
 	uprintf("NOCPWRSTAT: %08x\n", ptRAPSysctrlArea->ulRAP_SYSCTRL_NOCPWRSTAT);
 	uprintf("CLKCFG: %08x\n", ptRAPSysctrlArea->ulRAP_SYSCTRL_CLKCFG);
+	uprintf("\n");
 }
 
 
