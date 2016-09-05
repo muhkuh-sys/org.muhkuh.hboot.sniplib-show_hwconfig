@@ -11,8 +11,13 @@
     .func start, start
     .type start, STT_FUNC
 start:
-	stmfd   sp!, {r0, r1, r2, lr}
+	stmfd   sp!, {r0-r12, lr}
 
+	@ save romcode stack position
+	mov     r0, sp
+	ldr     r1, =sp_save
+	str     r0, [r1]
+	
 	@ Set own stack position.
 	ldr     r0, =stack_top
 	mov     sp, r0
@@ -26,11 +31,21 @@ clear_bss:
 	strlo   r0, [r1], #4
 	blo     clear_bss
 
-	b       show_cfg_main
+	blx     show_cfg_main
+	
+	@ restore romcode stack position
+	ldr     r1, =sp_save
+	ldr     r0, [r1]
+	mov     sp, r0
 
+	ldmfd   sp!, {r0-r12, lr}
+	bx      lr
+	
   .endfunc
-
+	
 @--------------------------------------
-
+	.align 4
+sp_save: 
+	.word 0
   .end
 
