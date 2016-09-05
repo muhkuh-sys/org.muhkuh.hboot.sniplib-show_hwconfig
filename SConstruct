@@ -66,6 +66,7 @@ sources = """
 # netX4000 CR7
 env_netx4000_cr7 = env_netx4000_default.Clone()
 env_netx4000_cr7.Replace(LDFILE = 'src/netx4000/netx4000_cr7.ld')
+env_netx4000_cr7.Append(CPPDEFINES = [['SHOW_HWCONFIG_CONSOLE']])
 src_netx4000_cr7 = env_netx4000_cr7.SetBuildPath('targets/netx4000_cr7', 'src', sources)
 elf_netx4000_cr7 = env_netx4000_cr7.Elf('targets/netx4000_cr7/netx4000_cr7.elf', src_netx4000_cr7 + platform_lib_netx4000)
 txt_netx4000_cr7 = env_netx4000_cr7.ObjDump('targets/netx4000_cr7/netx4000_cr7.txt', elf_netx4000_cr7, OBJDUMP_FLAGS=['--disassemble', '--source', '--all-headers', '--wide'])
@@ -91,6 +92,40 @@ snippet_netx4000_cr7 = env_netx4000_cr7.HBootSnippet('%s/%s-%s.xml' % (strArtifa
 
 # Create the POM file.
 tPOM = env_netx4000_cr7.POMTemplate('%s/%s-%s.pom' % (strArtifactPath, atSnippet['artifact'], PROJECT_VERSION), 'templates/pom.xml', POM_TEMPLATE_GROUP=atSnippet['group'], POM_TEMPLATE_ARTIFACT=atSnippet['artifact'], POM_TEMPLATE_VERSION=atSnippet['version'], POM_TEMPLATE_PACKAGING='xml')
+
+
+
+# netX4000 CR7
+env_netx4000_cr7_auto = env_netx4000_default.Clone()
+env_netx4000_cr7_auto.Replace(LDFILE = 'src/netx4000/netx4000_cr7.ld')
+env_netx4000_cr7_auto.Append(CPPDEFINES = [['SHOW_HWCONFIG_AUTO']])
+src_netx4000_cr7_auto = env_netx4000_cr7_auto.SetBuildPath('targets/netx4000_cr7_auto', 'src', sources)
+elf_netx4000_cr7_auto = env_netx4000_cr7_auto.Elf(         'targets/netx4000_cr7_auto/netx4000_cr7_auto.elf', src_netx4000_cr7_auto + platform_lib_netx4000)
+txt_netx4000_cr7_auto = env_netx4000_cr7_auto.ObjDump(     'targets/netx4000_cr7_auto/netx4000_cr7_auto.txt', elf_netx4000_cr7_auto, OBJDUMP_FLAGS=['--disassemble', '--source', '--all-headers', '--wide'])
+bin_netx4000_cr7_auto = env_netx4000_cr7_auto.ObjCopy(     'targets/netx4000_cr7_auto/netx4000_cr7_auto.bin', elf_netx4000_cr7_auto)
+tmp_netx4000_cr7_auto = env_netx4000_cr7_auto.GccSymbolTemplate('targets/netx4000_cr7_auto/snippet.xml', elf_netx4000_cr7_auto, GCCSYMBOLTEMPLATE_TEMPLATE='templates/hboot_snippet.xml', GCCSYMBOLTEMPLATE_BINFILE=bin_netx4000_cr7_auto[0])
+
+# Create the snippet from the parameters.
+atSnippet = {
+    'group': '.'.join(aArtifactGroupReverse),
+    'artifact': 'show_hwconfig_auto',
+    'version': PROJECT_VERSION,
+    'vcs-id': env_netx4000_cr7_auto.Version_GetVcsId(),
+    'license': 'GPL-2.0',
+    'author_name': 'Muhkuh team',
+    'author_url': 'https://github.com/muhkuh-sys',
+    'description': 'Show the current hardware configuration with an interactive menu on UART0.',
+    'categories': ['netx4000', 'hardware configuration']
+}
+strArtifactPath = 'targets/snippets/%s/%s/%s' % ('/'.join(aArtifactGroupReverse), atSnippet['artifact'], PROJECT_VERSION)
+snippet_netx4000_cr7_auto = env_netx4000_cr7_auto.HBootSnippet('%s/%s-%s.xml' % (strArtifactPath, atSnippet['artifact'], PROJECT_VERSION), tmp_netx4000_cr7_auto, PARAMETER=atSnippet)
+
+# Create the POM file.
+tPOM = env_netx4000_cr7_auto.POMTemplate('%s/%s-%s.pom' % (strArtifactPath, atSnippet['artifact'], PROJECT_VERSION), 'templates/pom.xml', POM_TEMPLATE_GROUP=atSnippet['group'], POM_TEMPLATE_ARTIFACT=atSnippet['artifact'], POM_TEMPLATE_VERSION=atSnippet['version'], POM_TEMPLATE_PACKAGING='xml')
+
+
+
+
 
 #env_netx56 = env_netx56_default.Clone()
 #env_netx56.Replace(LDFILE = 'src/netx56/netx56.ld')

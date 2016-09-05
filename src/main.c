@@ -498,17 +498,13 @@ static void show_power_and_clocks(void)
 /*--------------------------------------------------------------------------*/
 
 
-void show_cfg_main(void);
-void show_cfg_main(void)
+
+void show_cfg_init(void);
+void show_cfg_init(void)
 {
-	const char *pcInput;
-	int iExit;
-
-
 	systime_init();
 	uart_init(IO_UART_UNIT, &tUartCfg);
-	console_io_init();
-	
+
 	/* Set the serial vectors. */
 	memcpy(&tSerialVectors, &tSerialVectors_Uart, sizeof(SERIAL_COMM_UI_FN_T));
 
@@ -516,9 +512,19 @@ void show_cfg_main(void)
 	uprintf("Written by cthelen@hilscher.com in 2016.\n");
 	uprintf("V" VERSION_ALL "\n\n");
 
-	/* Switch all LEDs off. */
 	rdy_run_setLEDs(RDYRUN_OFF);
+}
 
+#ifdef SHOW_HWCONFIG_CONSOLE
+void show_cfg_main(void);
+void show_cfg_main(void)
+{
+	const char *pcInput;
+	int iExit;
+
+	show_cfg_init();
+	console_io_init();
+	
 	/* Prompt the user for a choice. */
 	iExit = 0;
 	do
@@ -558,4 +564,16 @@ void show_cfg_main(void)
 		}
 	} while( iExit==0 );
 }
+#endif
 
+#ifdef SHOW_HWCONFIG_AUTO
+void show_cfg_main(void);
+void show_cfg_main(void)
+{
+	show_cfg_init();
+	show_portcontrol();
+	show_mmios();
+	show_power_and_clocks();
+	show_ddr();
+}
+#endif
