@@ -507,7 +507,8 @@ void show_cfg_main(void)
 
 	systime_init();
 	uart_init(IO_UART_UNIT, &tUartCfg);
-
+	console_io_init();
+	
 	/* Set the serial vectors. */
 	memcpy(&tSerialVectors, &tSerialVectors_Uart, sizeof(SERIAL_COMM_UI_FN_T));
 
@@ -530,6 +531,7 @@ void show_cfg_main(void)
 		uprintf(">");
 		tSerialVectors.fn.fnFlush();
 		pcInput = console_io_read_line(80);
+
 		if( strcmp(pcInput, "p")==0 )
 		{
 			show_portcontrol();
