@@ -63,7 +63,7 @@ sources = """
 #
 # Build all files.
 #
-# netX4000 CR7
+# netX4000 CR7 with console
 env_netx4000_cr7 = env_netx4000_default.Clone()
 env_netx4000_cr7.Replace(LDFILE = 'src/netx4000/netx4000_cr7.ld')
 env_netx4000_cr7.Append(CPPDEFINES = [['SHOW_HWCONFIG_CONSOLE']])
@@ -95,7 +95,7 @@ tPOM = env_netx4000_cr7.POMTemplate('%s/%s-%s.pom' % (strArtifactPath, atSnippet
 
 
 
-# netX4000 CR7
+# netX4000 CR7 with automatic display
 env_netx4000_cr7_auto = env_netx4000_default.Clone()
 env_netx4000_cr7_auto.Replace(LDFILE = 'src/netx4000/netx4000_cr7.ld')
 env_netx4000_cr7_auto.Append(CPPDEFINES = [['SHOW_HWCONFIG_AUTO']])
