@@ -491,7 +491,72 @@ static void show_power_and_clocks(void)
 
 /*--------------------------------------------------------------------------*/
 
+static void show_bootmode_and_pll_speed(void)
+{
+	HOSTDEF(ptRAPSysctrlArea);
+	volatile unsigned long   ulBootmode = ptRAPSysctrlArea->ulRAP_SYSCTRL_BOOTMODE;
+	
+	uprintf("Bootstrap status register: 0x%08x\n", ulBootmode);
+	if ((ulBootmode & MSK_NX4000_RAP_SYSCTRL_BOOTMODE_SET_PLL_1200) == 0)
+	{
+		uprintf("PLL speed: 800 MHz\n");
+	}
+	else
+	{
+		uprintf("PLL speed: 1200 MHz\n");
+	}
+	uprintf("\n");
+}
 
+/*--------------------------------------------------------------------------*/
+
+#if ASIC_TYP==4000
+	typedef NX4000_EXT_SDRAM_CTRL_AREA_T SDRAM_CTRL_AREA_T;
+#elif  ASIC_TYP==56
+	typedef NX56_SDRAM_AREA_T SDRAM_CTRL_AREA_T;
+#endif
+
+static void show_sdram_ctrl_config(SDRAM_CTRL_AREA_T* ptSdram)
+{
+	unsigned long ulSdramGeneralCtrl;
+	unsigned long ulSdramTimingCtrl;
+	unsigned long ulSdramMr;
+	
+	ulSdramGeneralCtrl = ptSdram->ulSdram_general_ctrl; 
+	ulSdramTimingCtrl  = ptSdram->ulSdram_timing_ctrl; 
+	ulSdramMr          = ptSdram->ulSdram_mr; 
+	
+	
+	if ((ulSdramGeneralCtrl & HOSTMSK(sdram_general_ctrl_ctrl_en)) != 0)
+	{
+		uprintf(". On\n");
+	}
+	else
+	{
+		uprintf(". Off\n");
+	}
+	
+	uprintf(". Controller:          0x%08x\n", (unsigned long) ptSdram);
+	uprintf(". SDRAM general ctrl:  0x%08x\n", ulSdramGeneralCtrl);
+	uprintf(". SDRAM timing ctrl:   0x%08x\n", ulSdramTimingCtrl);
+	uprintf(". SDRAM mode register: 0x%08x\n", ulSdramMr);
+	uprintf("\n");
+
+}
+
+static void show_sdram(void)
+{
+	HOSTDEF(ptMemSdramArea);
+	HOSTDEF(ptHifSdramArea);
+	
+	uprintf("MEM SDRAM:\n");
+	show_sdram_ctrl_config(ptMemSdramArea);
+	uprintf("HIF SDRAM:\n");
+	show_sdram_ctrl_config(ptHifSdramArea);
+}
+
+
+/*--------------------------------------------------------------------------*/
 
 void show_cfg_init(void);
 void show_cfg_init(void)
@@ -526,7 +591,9 @@ void show_cfg_main(void)
 		uprintf("p: show the portcontrol settings\n");
 		uprintf("m: show the MMIOs\n");
 		uprintf("r: show the RAP ctrl power and clocks\n");
+		uprintf("b: show boot mode and PLL speed\n");
 		uprintf("d: show the DDR settings\n");
+		uprintf("s: show SDRAM settings\n");
 		uprintf("x: exit and continue booting\n");
 		uprintf(">");
 		tSerialVectors.fn.fnFlush();
@@ -544,9 +611,17 @@ void show_cfg_main(void)
 		{
 			show_power_and_clocks();
 		}
+		else if( strcmp(pcInput, "b")==0 )
+		{
+			show_bootmode_and_pll_speed();
+		}
 		else if( strcmp(pcInput, "d")==0 )
 		{
 			show_ddr();
+		}
+		else if( strcmp(pcInput, "s")==0 )
+		{
+			show_sdram();
 		}
 		else if( strcmp(pcInput, "x")==0 )
 		{
@@ -568,6 +643,8 @@ void show_cfg_main(void)
 	show_portcontrol();
 	show_mmios();
 	show_power_and_clocks();
+	show_bootmode_and_pll_speed();
 	show_ddr();
+	show_sdram();
 }
 #endif
