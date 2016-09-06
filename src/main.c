@@ -449,7 +449,16 @@ static void show_ddr(void)
 	unsigned int uiCnt;
 
 
-	uprintf("DDR CTRL:\n");
+	uprintf("DDR CTRL: ");
+	if ((ptDdrCtrlArea->aulDDR_CTRL_CTL[0] & MSK_NX4000_DDR_CTRL_CTL0_START) != 0)
+	{
+		uprintf("On\n");
+	}
+	else
+	{
+		uprintf("Off\n");
+	}
+	
 	uprintf("         +0       +1       +2       +3       +4       +5       +6       +7");
 	for(uiCnt=0; uiCnt<(sizeof(ptDdrCtrlArea->aulDDR_CTRL_CTL)/sizeof(ptDdrCtrlArea->aulDDR_CTRL_CTL[0])); uiCnt++)
 	{
@@ -463,7 +472,15 @@ static void show_ddr(void)
 
 	uprintf("\n\n");
 
-	uprintf("DDR PHY:\n");
+	uprintf("DDR PHY: ");
+	if ((ptDdrPhyArea->ulDDR_PHY_FUNCCTRL & MSK_NX4000_DDR_PHY_FUNCCTRL_FUNCRSTB) != 0)
+	{
+		uprintf("On\n");
+	}
+	else
+	{
+		uprintf("Off\n");
+	}
 	uprintf("FUNCCTRL: %08x    DLLCTRL: %08x    ZQCALCTRL: %08x    ZQODTCTRL: %08x\n", ptDdrPhyArea->ulDDR_PHY_FUNCCTRL, ptDdrPhyArea->ulDDR_PHY_DLLCTRL, ptDdrPhyArea->ulDDR_PHY_ZQCALCTRL, ptDdrPhyArea->ulDDR_PHY_ZQODTCTRL);
 	uprintf("RDCTRL:   %08x    RDTMG:   %08x    FIFOINIT:  %08x    OUTCTRL:   %08x\n", ptDdrPhyArea->ulDDR_PHY_RDCTRL, ptDdrPhyArea->ulDDR_PHY_RDTMG, ptDdrPhyArea->ulDDR_PHY_FIFOINIT, ptDdrPhyArea->ulDDR_PHY_OUTCTRL);
 	uprintf("WLCTRL1:  %08x    WLCTRL2: %08x    MASKSDLY1: %08x    MASKSDLY2: %08x\n", ptDdrPhyArea->ulDDR_PHY_WLCTRL1, ptDdrPhyArea->ulDDR_PHY_WLCTRL2, ptDdrPhyArea->ulDDR_PHY_MASKSDLY1, ptDdrPhyArea->ulDDR_PHY_MASKSDLY2);
@@ -529,11 +546,11 @@ static void show_sdram_ctrl_config(SDRAM_CTRL_AREA_T* ptSdram)
 	
 	if ((ulSdramGeneralCtrl & HOSTMSK(sdram_general_ctrl_ctrl_en)) != 0)
 	{
-		uprintf(". On\n");
+		uprintf("On\n");
 	}
 	else
 	{
-		uprintf(". Off\n");
+		uprintf("Off\n");
 	}
 	
 	uprintf(". Controller:          0x%08x\n", (unsigned long) ptSdram);
@@ -549,9 +566,9 @@ static void show_sdram(void)
 	HOSTDEF(ptMemSdramArea);
 	HOSTDEF(ptHifSdramArea);
 	
-	uprintf("MEM SDRAM:\n");
+	uprintf("MEM SDRAM: ");
 	show_sdram_ctrl_config(ptMemSdramArea);
-	uprintf("HIF SDRAM:\n");
+	uprintf("HIF SDRAM: ");
 	show_sdram_ctrl_config(ptHifSdramArea);
 }
 
