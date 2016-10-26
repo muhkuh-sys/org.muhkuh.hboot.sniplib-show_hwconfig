@@ -78,7 +78,7 @@ global PROJECT_VERSION
 aArtifactGroupReverse = ['org', 'muhkuh', 'hboot', 'sniplib']
 atSnippet = {
     'group': '.'.join(aArtifactGroupReverse),
-    'artifact': 'show_hwconfig',
+    'artifact': 'show_hwconfig_netx4000',
     'version': PROJECT_VERSION,
     'vcs_id': env_netx4000_cr7.Version_GetVcsId(),
     'vcs_url': 'https://github.com/muhkuh-sys/org.muhkuh.hboot.sniplib-show_hwconfig.git',
@@ -109,7 +109,7 @@ tmp_netx4000_cr7_auto = env_netx4000_cr7_auto.GccSymbolTemplate('targets/netx400
 # Create the snippet from the parameters.
 atSnippet = {
     'group': '.'.join(aArtifactGroupReverse),
-    'artifact': 'show_hwconfig_auto',
+    'artifact': 'show_hwconfig_auto_netx4000',
     'version': PROJECT_VERSION,
     'vcs_id': env_netx4000_cr7_auto.Version_GetVcsId(),
     'vcs_url': 'https://github.com/muhkuh-sys/org.muhkuh.hboot.sniplib-show_hwconfig.git',
