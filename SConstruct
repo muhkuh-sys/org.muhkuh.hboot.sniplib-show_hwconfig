@@ -116,7 +116,7 @@ atSnippet = {
     'license': 'GPL-2.0',
     'author_name': 'Muhkuh team',
     'author_url': 'https://github.com/muhkuh-sys',
-    'description': 'Show the current hardware configuration with an interactive menu on UART0.',
+    'description': 'Show the current hardware configuration on UART0.',
     'categories': ['netx4000', 'hardware configuration']
 }
 strArtifactPath = 'targets/snippets/%s/%s/%s' % ('/'.join(aArtifactGroupReverse), atSnippet['artifact'], PROJECT_VERSION)
